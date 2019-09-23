@@ -17,6 +17,15 @@ async function rawHtmlResponse(html) {
   return new Response(html, init);
 }
 
+async function rawCssResponse(css) {
+    const init = {
+          headers: {
+                  "content-type": "text/css; charset=UTF-8"
+          }
+    };
+      return new Response(css, init);
+}
+
 async function handleRequest(request) {
   const url = request.url;
   var removeHttp = url.slice(url.indexOf("//") + 2); //removes everything before the doubleslash, e.g. http://
@@ -26,11 +35,12 @@ async function handleRequest(request) {
     var page_name = 'index';
     var getCache = () => pages.get(page_name);
     var page = await getCache();
-  } else if (page_name.startsWith("assets/")) {
-    //gets from assets namespace if example.com/assets/$PATHs
-    var removeAssets = page_name.slice(url.indexOf("/") + 1)
-    var getCache = () => assets.get(removeAssets);
+  } else if (page_name.startsWith("css/")) {
+    //gets from css namespace if example.com/css/$PATHs
+    var removeCss = page_name.slice(page_name.indexOf("/") + 1)
+    var getCache = () => css.get(removeCss);
     var page = await getCache();
+    return rawCssResponse(page)
   } else {
     var getCache = () => pages.get(page_name);
     var page = await getCache();
