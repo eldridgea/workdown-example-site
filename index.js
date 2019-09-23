@@ -39,8 +39,8 @@ async function handleRequest(request) {
     //gets from css namespace if example.com/css/$PATHs
     var removeCss = page_name.slice(page_name.indexOf("/") + 1)
     var getCache = () => css.get(removeCss);
-    var page = await getCache();
-    return rawCssResponse(page)
+    var content = await getCache();
+    return rawCssResponse(content)
   } else {
     var getCache = () => pages.get(page_name);
     var page = await getCache();
